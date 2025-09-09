@@ -84,6 +84,12 @@
                                 </div>
                             </div>
                             
+                            <!-- Mobile-only star -->
+                            <div class="mobile-star" id="mobile-bridge-star" role="button" tabindex="0" aria-label="Click to learn more about bridging marketing and technology">
+                                <span class="mobile-star-icon">⭐</span>
+                                <span class="mobile-star-text">Click me</span>
+                            </div>
+                            
                             <div class="bridge-pillar technology">
                                 <div class="pillar-top">
                                     <div class="pillar-icon">
@@ -364,16 +370,6 @@
         </div>
     </section>
 
-    <!-- Call to Action -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content fade-in">
-                <h2 class="cta-title">Let's Connect</h2>
-                <p class="cta-subtitle">Interested in innovation, collaboration, or just want to chat about the future of marketing technology?</p>
-                <a href="contact.html" class="btn btn--primary btn--large">Get In Touch</a>
-            </div>
-        </div>
-    </section>
 
     <!-- Bridge Modal -->
     <div class="modal-overlay" id="bridge-modal">
@@ -444,5 +440,98 @@
     </footer>
 
     <script src="js/main.js"></script>
+    
+    <script>
+        // Test inline JavaScript
+        console.log('Inline script loaded!');
+        
+        // Add click handler directly to mobile star
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Testing mobile star click...');
+            const mobileStar = document.getElementById('mobile-bridge-star');
+            const modal = document.getElementById('bridge-modal');
+            
+            console.log('Found elements:', { mobileStar, modal });
+            
+            if (mobileStar && modal) {
+                mobileStar.addEventListener('click', function() {
+                    console.log('Mobile star clicked - opening modal!');
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    
+                    // Initialize modal scroll animations after opening
+                    setTimeout(() => initModalScrollAnimations(), 100);
+                });
+                
+                // Also add close functionality
+                const modalClose = document.getElementById('modal-close');
+                if (modalClose) {
+                    modalClose.addEventListener('click', function() {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                }
+                
+                // Close on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && modal.classList.contains('active')) {
+                        modal.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+            
+            // Modal scroll animations
+            function initModalScrollAnimations() {
+                const modalBody = document.querySelector('.modal-body');
+                if (!modalBody) return;
+                
+                // Get all animatable elements in the modal
+                const animatableElements = modalBody.querySelectorAll('.modal-section, .impact-item, .modal-section h4, .modal-section p, .modal-section ul li');
+                
+                // Add initial hidden state
+                animatableElements.forEach(element => {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+                
+                // Create intersection observer for modal content
+                const modalObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Animate in when visible
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        } else {
+                            // Animate out when not visible
+                            entry.target.style.opacity = '0';
+                            entry.target.style.transform = 'translateY(30px)';
+                        }
+                    });
+                }, {
+                    root: modalBody, // Observe within modal body
+                    threshold: 0.3,
+                    rootMargin: '20px'
+                });
+                
+                // Observe all elements
+                animatableElements.forEach((element, index) => {
+                    // Stagger the animations slightly
+                    setTimeout(() => {
+                        modalObserver.observe(element);
+                    }, index * 50);
+                });
+                
+                // Also animate list items with staggered delay
+                const listItems = modalBody.querySelectorAll('ul li');
+                listItems.forEach((item, index) => {
+                    item.style.transitionDelay = `${index * 0.1}s`;
+                });
+                
+                console.log('Modal scroll animations initialized for', animatableElements.length, 'elements');
+            }
+        });
+    </script>
 </body>
 </html>

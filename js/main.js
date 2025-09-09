@@ -1,7 +1,10 @@
 // Portfolio Website JavaScript
 // Trevor Kist - Marketing Technology Leader
+console.log('main.js loaded!');
+alert('JavaScript is working!');
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing...');
     // Initialize all features
     initMobileMenu();
     initScrollAnimations();
@@ -639,20 +642,57 @@ function initCarousel() {
 
 // ===== BRIDGE MODAL FUNCTIONALITY =====
 function initBridgeModal() {
+    console.log('Initializing bridge modal...');
     const bridgeStar = document.getElementById('bridge-star');
+    const mobileStar = document.getElementById('mobile-bridge-star');
     const modal = document.getElementById('bridge-modal');
     const modalClose = document.getElementById('modal-close');
     
-    if (!bridgeStar || !modal || !modalClose) return;
+    console.log('Elements found:', { bridgeStar, mobileStar, modal, modalClose });
     
-    // Open modal on click
-    bridgeStar.addEventListener('click', function() {
-        openModal();
-        trackEvent('bridge_modal_open', {
-            trigger: 'click',
-            page: window.location.pathname
+    if (!modal || !modalClose) {
+        console.log('Modal or close button not found!');
+        return;
+    }
+    
+    // Open modal on click - desktop star
+    if (bridgeStar) {
+        bridgeStar.addEventListener('click', function() {
+            openModal();
+            trackEvent('bridge_modal_open', {
+                trigger: 'click',
+                page: window.location.pathname
+            });
         });
-    });
+    }
+    
+    // Open modal on click - mobile star
+    if (mobileStar) {
+        mobileStar.addEventListener('click', function(e) {
+            console.log('Mobile star clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            openModal();
+            trackEvent('bridge_modal_open', {
+                trigger: 'click',
+                page: window.location.pathname,
+                element: 'mobile_star'
+            });
+        });
+        
+        // Also handle keyboard events for mobile star
+        mobileStar.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openModal();
+                trackEvent('bridge_modal_open', {
+                    trigger: 'keyboard',
+                    page: window.location.pathname,
+                    element: 'mobile_star'
+                });
+            }
+        });
+    }
     
     // Open modal on Enter key
     bridgeStar.addEventListener('keydown', function(e) {
@@ -684,6 +724,7 @@ function initBridgeModal() {
     });
     
     function openModal() {
+        console.log('Opening modal...', modal);
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         
