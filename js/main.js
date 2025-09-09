@@ -1,7 +1,6 @@
 // Portfolio Website JavaScript
 // Trevor Kist - Marketing Technology Leader
 console.log('main.js loaded!');
-alert('JavaScript is working!');
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing...');
